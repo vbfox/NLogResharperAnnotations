@@ -1,0 +1,9 @@
+group Main
+	source https://www.nuget.org/api/v2/
+	
+	nuget ExternalAnnotationsGenerator
+	nuget NLog
+
+group Build
+	source https://www.nuget.org/api/v2/
+	nuget FAKE
