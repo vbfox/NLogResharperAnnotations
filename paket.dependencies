@@ -2,7 +2,8 @@ group Main
 	source https://www.nuget.org/api/v2/
 	
 	nuget ExternalAnnotationsGenerator
-	nuget NLog
+	nuget Newtonsoft.Json
+    nuget NLog
 
 group Build
 	source https://www.nuget.org/api/v2/
