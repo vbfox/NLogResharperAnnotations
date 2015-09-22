@@ -9,16 +9,11 @@ namespace NLogResharperAnnotations
 {
     class Program
     {
-        [SuppressMessage("ReSharper", "ClassNeverInstantiated.Local")]
-        class T
-        {
-        }
-
         [SuppressMessage("ReSharper", "RedundantTypeArgumentsOfMethod")]
         static void Main(string[] args)
         {
             var annotator = Annotator.Create();
-            annotator.AnnotateType<ILogger>(type =>
+            annotator.Annotate<ILogger>(type =>
             {
                 AnnotateFatal(type);
                 AnnotateError(type);
@@ -34,8 +29,8 @@ namespace NLogResharperAnnotations
         static void AnnotateDebug(ITypeAnnotator<ILogger> t)
         {
             // Modern interface
-            t.Annotate(l => l.Debug(CanBeNull<T>()));
-            t.Annotate(l => l.Debug(NotNull<IFormatProvider>(), CanBeNull<T>()));
+            t.Annotate(l => l.Debug(CanBeNull<TClass>()));
+            t.Annotate(l => l.Debug(NotNull<IFormatProvider>(), CanBeNull<TClass>()));
             t.Annotate(l => l.Debug(NotNull<LogMessageGenerator>()));
             t.Annotate(l => l.DebugException(NotNull<string>(), NotNull<Exception>()));
             t.Annotate(l => l.Debug(NotNull<Exception>(), FormatString(), NotNull<object[]>()));
@@ -44,12 +39,12 @@ namespace NLogResharperAnnotations
             t.Annotate(l => l.Debug(NotNull<string>()));
             t.Annotate(l => l.Debug(FormatString(), NotNull<object[]>()));
             t.Annotate(l => l.Debug(NotNull<string>(), NotNull<Exception>()));
-            t.Annotate(l => l.Debug(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Debug(FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Debug(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Debug(FormatString(), CanBeNull<T>(), NotNull<T>()));
-            t.Annotate(l => l.Debug(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Debug(FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
+            t.Annotate(l => l.Debug(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Debug(FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Debug(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Debug(FormatString(), CanBeNull<TClass>(), NotNull<TClass>()));
+            t.Annotate(l => l.Debug(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Debug(FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
 
             // NLog-V1
             t.Annotate(l => l.Debug(CanBeNull<object>()));
@@ -88,8 +83,8 @@ namespace NLogResharperAnnotations
         static void AnnotateInfo(ITypeAnnotator<ILogger> t)
         {
             // Modern interface
-            t.Annotate(l => l.Info(CanBeNull<T>()));
-            t.Annotate(l => l.Info(NotNull<IFormatProvider>(), CanBeNull<T>()));
+            t.Annotate(l => l.Info(CanBeNull<TClass>()));
+            t.Annotate(l => l.Info(NotNull<IFormatProvider>(), CanBeNull<TClass>()));
             t.Annotate(l => l.Info(NotNull<LogMessageGenerator>()));
             t.Annotate(l => l.InfoException(NotNull<string>(), NotNull<Exception>()));
             t.Annotate(l => l.Info(NotNull<Exception>(), FormatString(), NotNull<object[]>()));
@@ -98,12 +93,12 @@ namespace NLogResharperAnnotations
             t.Annotate(l => l.Info(NotNull<string>()));
             t.Annotate(l => l.Info(FormatString(), NotNull<object[]>()));
             t.Annotate(l => l.Info(NotNull<string>(), NotNull<Exception>()));
-            t.Annotate(l => l.Info(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Info(FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Info(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Info(FormatString(), CanBeNull<T>(), NotNull<T>()));
-            t.Annotate(l => l.Info(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Info(FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
+            t.Annotate(l => l.Info(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Info(FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Info(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Info(FormatString(), CanBeNull<TClass>(), NotNull<TClass>()));
+            t.Annotate(l => l.Info(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Info(FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
 
             // NLog-V1
             t.Annotate(l => l.Info(CanBeNull<object>()));
@@ -142,8 +137,8 @@ namespace NLogResharperAnnotations
         static void AnnotateFatal(ITypeAnnotator<ILogger> t)
         {
             // Modern interface
-            t.Annotate(l => l.Fatal(CanBeNull<T>()));
-            t.Annotate(l => l.Fatal(NotNull<IFormatProvider>(), CanBeNull<T>()));
+            t.Annotate(l => l.Fatal(CanBeNull<TClass>()));
+            t.Annotate(l => l.Fatal(NotNull<IFormatProvider>(), CanBeNull<TClass>()));
             t.Annotate(l => l.Fatal(NotNull<LogMessageGenerator>()));
             t.Annotate(l => l.FatalException(NotNull<string>(), NotNull<Exception>()));
             t.Annotate(l => l.Fatal(NotNull<Exception>(), FormatString(), NotNull<object[]>()));
@@ -152,12 +147,12 @@ namespace NLogResharperAnnotations
             t.Annotate(l => l.Fatal(NotNull<string>()));
             t.Annotate(l => l.Fatal(FormatString(), NotNull<object[]>()));
             t.Annotate(l => l.Fatal(NotNull<string>(), NotNull<Exception>()));
-            t.Annotate(l => l.Fatal(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Fatal(FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Fatal(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Fatal(FormatString(), CanBeNull<T>(), NotNull<T>()));
-            t.Annotate(l => l.Fatal(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Fatal(FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
+            t.Annotate(l => l.Fatal(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Fatal(FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Fatal(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Fatal(FormatString(), CanBeNull<TClass>(), NotNull<TClass>()));
+            t.Annotate(l => l.Fatal(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Fatal(FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
 
             // NLog-V1
             t.Annotate(l => l.Fatal(CanBeNull<object>()));
@@ -196,8 +191,8 @@ namespace NLogResharperAnnotations
         static void AnnotateWarn(ITypeAnnotator<ILogger> t)
         {
             // Modern interface
-            t.Annotate(l => l.Warn(CanBeNull<T>()));
-            t.Annotate(l => l.Warn(NotNull<IFormatProvider>(), CanBeNull<T>()));
+            t.Annotate(l => l.Warn(CanBeNull<TClass>()));
+            t.Annotate(l => l.Warn(NotNull<IFormatProvider>(), CanBeNull<TClass>()));
             t.Annotate(l => l.Warn(NotNull<LogMessageGenerator>()));
             t.Annotate(l => l.WarnException(NotNull<string>(), NotNull<Exception>()));
             t.Annotate(l => l.Warn(NotNull<Exception>(), FormatString(), NotNull<object[]>()));
@@ -206,12 +201,12 @@ namespace NLogResharperAnnotations
             t.Annotate(l => l.Warn(NotNull<string>()));
             t.Annotate(l => l.Warn(FormatString(), NotNull<object[]>()));
             t.Annotate(l => l.Warn(NotNull<string>(), NotNull<Exception>()));
-            t.Annotate(l => l.Warn(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Warn(FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Warn(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Warn(FormatString(), CanBeNull<T>(), NotNull<T>()));
-            t.Annotate(l => l.Warn(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Warn(FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
+            t.Annotate(l => l.Warn(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Warn(FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Warn(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Warn(FormatString(), CanBeNull<TClass>(), NotNull<TClass>()));
+            t.Annotate(l => l.Warn(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Warn(FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
 
             // NLog-V1
             t.Annotate(l => l.Warn(CanBeNull<object>()));
@@ -250,8 +245,8 @@ namespace NLogResharperAnnotations
         static void AnnotateTrace(ITypeAnnotator<ILogger> t)
         {
             // Modern interface
-            t.Annotate(l => l.Trace(CanBeNull<T>()));
-            t.Annotate(l => l.Trace(NotNull<IFormatProvider>(), CanBeNull<T>()));
+            t.Annotate(l => l.Trace(CanBeNull<TClass>()));
+            t.Annotate(l => l.Trace(NotNull<IFormatProvider>(), CanBeNull<TClass>()));
             t.Annotate(l => l.Trace(NotNull<LogMessageGenerator>()));
             t.Annotate(l => l.TraceException(NotNull<string>(), NotNull<Exception>()));
             t.Annotate(l => l.Trace(NotNull<Exception>(), FormatString(), NotNull<object[]>()));
@@ -260,12 +255,12 @@ namespace NLogResharperAnnotations
             t.Annotate(l => l.Trace(NotNull<string>()));
             t.Annotate(l => l.Trace(FormatString(), NotNull<object[]>()));
             t.Annotate(l => l.Trace(NotNull<string>(), NotNull<Exception>()));
-            t.Annotate(l => l.Trace(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Trace(FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Trace(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Trace(FormatString(), CanBeNull<T>(), NotNull<T>()));
-            t.Annotate(l => l.Trace(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Trace(FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
+            t.Annotate(l => l.Trace(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Trace(FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Trace(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Trace(FormatString(), CanBeNull<TClass>(), NotNull<TClass>()));
+            t.Annotate(l => l.Trace(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Trace(FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
 
             // NLog-V1
             t.Annotate(l => l.Trace(CanBeNull<object>()));
@@ -304,8 +299,8 @@ namespace NLogResharperAnnotations
         static void AnnotateError(ITypeAnnotator<ILogger> t)
         {
             // Modern interface
-            t.Annotate(l => l.Error(CanBeNull<T>()));
-            t.Annotate(l => l.Error(NotNull<IFormatProvider>(), CanBeNull<T>()));
+            t.Annotate(l => l.Error(CanBeNull<TClass>()));
+            t.Annotate(l => l.Error(NotNull<IFormatProvider>(), CanBeNull<TClass>()));
             t.Annotate(l => l.Error(NotNull<LogMessageGenerator>()));
             t.Annotate(l => l.ErrorException(NotNull<string>(), NotNull<Exception>()));
             t.Annotate(l => l.Error(NotNull<Exception>(), FormatString(), NotNull<object[]>()));
@@ -314,12 +309,12 @@ namespace NLogResharperAnnotations
             t.Annotate(l => l.Error(NotNull<string>()));
             t.Annotate(l => l.Error(FormatString(), NotNull<object[]>()));
             t.Annotate(l => l.Error(NotNull<string>(), NotNull<Exception>()));
-            t.Annotate(l => l.Error(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Error(FormatString(), CanBeNull<T>()));
-            t.Annotate(l => l.Error(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Error(FormatString(), CanBeNull<T>(), NotNull<T>()));
-            t.Annotate(l => l.Error(NotNull<IFormatProvider>(), FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
-            t.Annotate(l => l.Error(FormatString(), CanBeNull<T>(), CanBeNull<T>(), CanBeNull<T>()));
+            t.Annotate(l => l.Error(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Error(FormatString(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Error(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Error(FormatString(), CanBeNull<TClass>(), NotNull<TClass>()));
+            t.Annotate(l => l.Error(NotNull<IFormatProvider>(), FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
+            t.Annotate(l => l.Error(FormatString(), CanBeNull<TClass>(), CanBeNull<TClass>(), CanBeNull<TClass>()));
 
             // NLog-V1
             t.Annotate(l => l.Error(CanBeNull<object>()));

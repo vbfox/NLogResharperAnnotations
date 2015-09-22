@@ -1,9 +1,9 @@
 NUGET
   remote: https://www.nuget.org/api/v2
   specs:
-    ExternalAnnotationsGenerator (1.0.0.0)
+    ExternalAnnotationsGenerator (2.0)
     Newtonsoft.Json (7.0.1)
-    NLog (4.1.1)
+    NLog (4.1.2)
 
 GROUP Build
 NUGET
