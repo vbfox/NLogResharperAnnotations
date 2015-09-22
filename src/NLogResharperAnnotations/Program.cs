@@ -1,18 +1,144 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
 using ExternalAnnotationsGenerator;
+using NDesk.Options;
 using NLog;
+using NLog.Common;
+using NLog.Config;
 using static ExternalAnnotationsGenerator.Annotations;
+#pragma warning disable 612
 #pragma warning disable 618
 
 namespace NLogResharperAnnotations
 {
+    [SuppressMessage("ReSharper", "PossibleUnintendedReferenceComparison")]
     class Program
     {
         [SuppressMessage("ReSharper", "RedundantTypeArgumentsOfMethod")]
         static void Main(string[] args)
         {
             var annotator = Annotator.Create();
+
+            AnnotateLogger(annotator);
+            AnnotateFactories(annotator);
+
+            var nuspec = new NugetSpec(
+                id: "NLog.Annotations",
+                title: "NLog Annotations",
+                authors: "Julien Roncaglia",
+                owners: "Julien Roncaglia",
+                projectUrl: "https://github.com/vbfox/NLogResharperAnnotations",
+                iconUrl: "https://raw.github.com/vbfox/NLogResharperAnnotations/master/nlog.png",
+                description: "Annotations for the NLog.dll file",
+                tags: "NLog Annotations");
+
+            RunApp("NLogResharperAnnotations", args, annotator, nuspec);
+        }
+
+        private static NugetSpec SpecWithVersion(NugetSpec spec, Version version)
+        {
+            return new NugetSpec(
+                spec.Id,
+                version.ToString(),
+                spec.Title,
+                spec.Authors,
+                spec.Owners,
+                spec.ProjectUrl,
+                spec.IconUrl,
+                spec.Description,
+                spec.Tags);
+        }
+
+        private static void RunApp(string exeName, string[] args, IAnnotator annotator, NugetSpec nuspec)
+        {
+            var parsedArgs = ParseArgs(args);
+            if (parsedArgs.ShowHelp)
+            {
+                ShowHelp(exeName, parsedArgs);
+            }
+            else
+            {
+                var version = parsedArgs.Version ?? new Version("1.0.0.0");
+                var dir = parsedArgs.Directory ?? new DirectoryInfo(Environment.CurrentDirectory);
+                var fixedSpec = SpecWithVersion(nuspec, version);
+                annotator.CreateNugetPackage(fixedSpec, dir);
+            }
+        }
+
+        private static void ShowHelp(string exeName, Args args)
+        {
+            var set = GetOptionSet(new Args());
+            if (args.ParseError != null)
+            {
+                Console.WriteLine(args.ParseError);
+                Console.WriteLine();
+            }
+            Console.WriteLine($"Usage: {exeName} [OPTIONS]+");
+            Console.WriteLine("Generate the nuget annotation package");
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            set.WriteOptionDescriptions(Console.Out);
+        }
+
+        private class Args
+        {
+            public bool ShowHelp { get; set; }
+            public Version Version { get; set; }
+            public string ParseError { get; set; }
+            public DirectoryInfo Directory { get; set; }
+        }
+
+        private static OptionSet GetOptionSet(Args args)
+        {
+            return new OptionSet
+            {
+                {
+                    "h|?|help",
+                    "show this message and exit",
+                    v => args.ShowHelp = v != null
+                },
+                {
+                    "v|version=",
+                    "Version of the generated package (Default: 1.0.0.0)",
+                    v => args.Version = new Version(v)
+                },
+                {
+                    "d|directory=",
+                    "The root directory of the NuGet package (Default: Current directory)",
+                    v => args.Directory = new DirectoryInfo(v)
+                }
+            };
+        }
+
+        private static Args ParseArgs(string[] args)
+        {
+            var result = new Args();
+            try
+            {
+                var set = GetOptionSet(result);
+
+                var extra = set.Parse(args);
+                if (extra.Count != 0)
+                {
+                    result.ShowHelp = true;
+                    result.ParseError = "Unknown parameters : " + string.Join(" ", extra);
+                }
+
+                return result;
+            }
+            catch(Exception exception)
+            {
+                result.ShowHelp = true;
+                result.ParseError = "Error : " + exception.Message;
+                return result;
+            }
+        }
+
+        private static void AnnotateLogger(IAnnotator annotator)
+        {
             annotator.Annotate<ILogger>(type =>
             {
                 AnnotateFatal(type);
@@ -22,8 +148,6 @@ namespace NLogResharperAnnotations
                 AnnotateDebug(type);
                 AnnotateTrace(type);
             });
-
-            annotator.SaveAlongAssemblies();
         }
 
         static void AnnotateDebug(ITypeAnnotator<ILogger> t)
@@ -348,6 +472,41 @@ namespace NLogResharperAnnotations
             t.Annotate(l => l.Error(NotNull<IFormatProvider>(), FormatString(), Some<uint>()));
             t.Annotate(l => l.Error(FormatString(), Some<ulong>()));
             t.Annotate(l => l.Error(NotNull<IFormatProvider>(), FormatString(), Some<ulong>()));
+        }
+
+        private static void AnnotateFactories(IAnnotator annotator)
+        {
+            annotator.Annotate<LogManager>(type =>
+            {
+                type.Annotate(_ => LogManager.CreateNullLogger() == NotNull<ILogger>());
+                type.Annotate(_ => LogManager.GetCurrentClassLogger() == NotNull<ILogger>());
+                type.Annotate(_ => LogManager.GetCurrentClassLogger(CanBeNull<Type>()) == NotNull<ILogger>());
+                type.Annotate(_ => LogManager.GetLogger(NotNull<string>()) == NotNull<ILogger>());
+                type.Annotate(_ => LogManager.GetLogger(NotNull<string>(), CanBeNull<Type>()) == NotNull<ILogger>());
+                type.Annotate(_ => LogManager.DefaultCultureInfo == NotNull<LogManager.GetCultureInfo>());
+                type.Annotate(_ => LogManager.Configuration == CanBeNull<LoggingConfiguration>());
+                type.Annotate(_ => LogManager.DisableLogging() == NotNull<IDisposable>());
+                type.Annotate(_ => LogManager.AddHiddenAssembly(NotNull<Assembly>()));
+                type.Annotate(_ => LogManager.Flush(NotNull<AsyncContinuation>()));
+                type.Annotate(_ => LogManager.Flush(NotNull<AsyncContinuation>(), Some<TimeSpan>()));
+                type.Annotate(_ => LogManager.Flush(NotNull<AsyncContinuation>(), Some<int>()));
+            });
+
+            annotator.Annotate<LogFactory>(type =>
+            {
+                type.Annotate(x => x.CreateNullLogger() == NotNull<ILogger>());
+                type.Annotate(x => x.GetCurrentClassLogger() == NotNull<ILogger>());
+                type.Annotate(x => x.GetCurrentClassLogger(CanBeNull<Type>()) == NotNull<ILogger>());
+                type.Annotate(x => x.GetLogger(NotNull<string>()) == NotNull<ILogger>());
+                type.Annotate(x => x.GetLogger(NotNull<string>(), CanBeNull<Type>()) == NotNull<ILogger>());
+                type.Annotate(x => x.DefaultCultureInfo == CanBeNull<CultureInfo>());
+                type.Annotate(x => x.Configuration == CanBeNull<LoggingConfiguration>());
+                type.Annotate(x => x.DisableLogging() == NotNull<IDisposable>());
+                type.Annotate(x => x.SuspendLogging() == NotNull<IDisposable>());
+                type.Annotate(x => x.Flush(NotNull<AsyncContinuation>()));
+                type.Annotate(x => x.Flush(NotNull<AsyncContinuation>(), Some<TimeSpan>()));
+                type.Annotate(x => x.Flush(NotNull<AsyncContinuation>(), Some<int>()));
+            });
         }
     }
 }
