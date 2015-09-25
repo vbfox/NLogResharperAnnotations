@@ -32,3 +32,4 @@ _ReSharper*/
 /.fake/
 /paket-files/
 /packages/
+/out/

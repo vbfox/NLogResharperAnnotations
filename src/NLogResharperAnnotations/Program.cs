@@ -18,7 +18,7 @@ namespace NLogResharperAnnotations
     class Program
     {
         [SuppressMessage("ReSharper", "RedundantTypeArgumentsOfMethod")]
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             var annotator = Annotator.Create();
 
@@ -35,7 +35,7 @@ namespace NLogResharperAnnotations
                 description: "Annotations for the NLog.dll file",
                 tags: "NLog Annotations");
 
-            RunApp("NLogResharperAnnotations", args, annotator, nuspec);
+            return RunApp("NLogResharperAnnotations", args, annotator, nuspec);
         }
 
         private static NugetSpec SpecWithVersion(NugetSpec spec, Version version)
@@ -52,20 +52,39 @@ namespace NLogResharperAnnotations
                 spec.Tags);
         }
 
-        private static void RunApp(string exeName, string[] args, IAnnotator annotator, NugetSpec nuspec)
+        private const int SuccessExitCode = 0;
+        private const int ExceptionExitCode = 1;
+        private const int InvalidArgumentsExitCode = 2;
+
+        private static int RunApp(string exeName, string[] args, IAnnotator annotator, NugetSpec nuspec)
         {
-            var parsedArgs = ParseArgs(args);
-            if (parsedArgs.ShowHelp)
+            try
             {
-                ShowHelp(exeName, parsedArgs);
+                var parsedArgs = ParseArgs(args);
+                if (parsedArgs.ShowHelp)
+                {
+                    ShowHelp(exeName, parsedArgs);
+                    return parsedArgs.ParseError == null ? SuccessExitCode : InvalidArgumentsExitCode;
+                }
+
+                RunGeneration(annotator, nuspec, parsedArgs);
+                return SuccessExitCode;
             }
-            else
+            catch (Exception e)
             {
-                var version = parsedArgs.Version ?? new Version("1.0.0.0");
-                var dir = parsedArgs.Directory ?? new DirectoryInfo(Environment.CurrentDirectory);
-                var fixedSpec = SpecWithVersion(nuspec, version);
-                annotator.CreateNugetPackage(fixedSpec, dir);
+                Console.WriteLine("Error: " + e.Message);
+                return ExceptionExitCode;
             }
+        }
+
+        private static void RunGeneration(IAnnotator annotator, NugetSpec nuspec, Args parsedArgs)
+        {
+            var version = parsedArgs.Version ?? new Version("1.0.0.0");
+            var dir = parsedArgs.Directory ?? new DirectoryInfo(Environment.CurrentDirectory);
+            var fixedSpec = SpecWithVersion(nuspec, version);
+            annotator.CreateNugetPackage(fixedSpec, dir);
+
+            Console.WriteLine($"Generated version {version}  in {dir.FullName}");
         }
 
         private static void ShowHelp(string exeName, Args args)

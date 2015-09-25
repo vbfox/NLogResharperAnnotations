@@ -1,7 +1,7 @@
 NUGET
   remote: https://www.nuget.org/api/v2
   specs:
-    ExternalAnnotationsGenerator (2.0)
+    ExternalAnnotationsGenerator (2.1)
     Newtonsoft.Json (7.0.1)
     NLog (4.1.2)
 
@@ -10,3 +10,17 @@ NUGET
   remote: https://www.nuget.org/api/v2
   specs:
     FAKE (4.4.2)
+    Microsoft.Bcl (1.1.10)
+      Microsoft.Bcl.Build (>= 1.0.14)
+    Microsoft.Bcl.Build (1.0.21)
+    Microsoft.Net.Http (2.2.29)
+      Microsoft.Bcl (>= 1.1.10)
+      Microsoft.Bcl.Build (>= 1.0.14)
+    NuGet.CommandLine (2.8.6)
+    Octokit (0.16.0)
+      Microsoft.Net.Http
+GITHUB
+  remote: fsharp/FAKE
+  specs:
+    modules/Octokit/Octokit.fsx (448a0e59aa1381714d045bf81c3ab5692aad6259)
+      Octokit
