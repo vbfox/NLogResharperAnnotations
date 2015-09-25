@@ -102,7 +102,7 @@ Target "PublishNuget" <| fun _ ->
         | Some(key) -> key
         | None -> getUserPassword "NuGet key: "
         
-    Paket.Push <| fun p ->  { p with WorkingDir = outDir; ApiKey = key }
+    Paket.Push <| fun p ->  { p with WorkingDir = outDir; ApiKey = key; PublishUrl = "https://resharper-plugins.jetbrains.com" }
 
 // --------------------------------------------------------------------------------------
 // Release Scripts
