@@ -12,6 +12,6 @@ test: off
 artifacts:
 - path: out\*.nupkg
   name: Resharper extension package
-- path: out\*.xml
+- path: out\**\*.xml
   name: Resharper annotation
 deploy: off
