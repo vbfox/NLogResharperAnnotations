@@ -1,3 +1,7 @@
+### Version 2.1
+
+Attempt to addopt a ReSharper 9.0 compatible NuGet layout.
+
 ### Version 2.0
 
 First version based on [ExternalAnnotationsGenerator](ExternalAnnotationsGenerator).
