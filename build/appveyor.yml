@@ -1,0 +1,15 @@
+version: 2.0.{build}
+os: Visual Studio 2015
+cache:
+- '%LOCALAPPDATA%\NuGet\Cache -> paket.lock'
+- paket-files -> paket.lock
+- .paket\paket.exe
+nuget:
+  disable_publish_on_pr: true
+build_script:
+- build.cmd CI
+test: off
+artifacts:
+- path: out\*.nupkg
+  name: Resharper extension package
+deploy: off
